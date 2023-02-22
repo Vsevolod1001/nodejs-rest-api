@@ -32,6 +32,13 @@ const schemaCreate = Joi.object({
   favorite: Joi.bool(),
 });
 
+const schemaPut = Joi.object({
+  name: Joi.string(),
+  email: Joi.string(),
+  phone: Joi.string(),
+  favorite: Joi.bool(),
+});
+
 const schemaFavorite = Joi.object({
   favorite: Joi.bool().required(),
 });
@@ -40,4 +47,5 @@ module.exports = {
   Contact,
   schemaCreate,
   schemaFavorite,
+  schemaPut,
 };
