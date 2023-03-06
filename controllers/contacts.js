@@ -4,13 +4,27 @@ const { Contact } = require("../models/contact");
 
 const getAll = async (req, res, next) => {
   const { _id } = req.user;
-  const { page, limit, ...favorite } = req.query;
+  const { page, limit, favorite, name, phone } = req.query;
   const skip = (page - 1) * limit;
-  const contacts = await Contact.find({ owner: _id, ...favorite }, "", {
-    skip,
-    limit: +limit,
-  }).populate("owner", "_id email");
-  res.json({
+
+  const searchParams = { owner: _id };
+
+  if (favorite) {
+    searchParams.favorite = favorite;
+  }
+  if (name) {
+    searchParams.name = name;
+  }
+  if (phone) {
+    searchParams.phone = phone;
+  }
+
+  const contacts = await Contact.find(searchParams)
+    .skip(skip)
+    .limit(Number(limit))
+    .sort("name")
+    .populate("owner", "_id email");
+  return res.json({
     status: "success",
     code: 200,
     data: {
@@ -44,6 +58,7 @@ const create = async (req, res, next) => {
     },
   });
 };
+
 const removeById = async (req, res) => {
   const { id } = req.params;
   const result = await Contact.findByIdAndRemove(id);
