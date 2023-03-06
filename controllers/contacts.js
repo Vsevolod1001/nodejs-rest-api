@@ -4,7 +4,7 @@ const { Contact } = require("../models/contact");
 
 const getAll = async (req, res, next) => {
   const { _id } = req.user;
-  const { page, limit, favorite, name, phone } = req.query;
+  const { page, limit, favorite, name, email } = req.query;
   const skip = (page - 1) * limit;
 
   const searchParams = { owner: _id };
@@ -15,8 +15,8 @@ const getAll = async (req, res, next) => {
   if (name) {
     searchParams.name = name;
   }
-  if (phone) {
-    searchParams.phone = phone;
+  if (email) {
+    searchParams.phone = email;
   }
 
   const contacts = await Contact.find(searchParams)
