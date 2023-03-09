@@ -3,6 +3,7 @@ const createError = require("../helpers/createError");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { SECRET_KEY } = require("../helpers/env");
+const gravatar = require("gravatar");
 
 const register = async (req, res) => {
   const { password, email, subscription } = req.body;
@@ -11,10 +12,12 @@ const register = async (req, res) => {
     throw createError(409, "Email in use");
   }
   const hashedPassword = bcrypt.hashSync(password, 10);
+  const avatarURL = gravatar.url(email);
   await User.create({
     password: hashedPassword,
     email,
     subscription,
+    avatarURL,
   });
   res.status(201).json({
     status: "success",
